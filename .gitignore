@@ -1,0 +1,11 @@
+**/target
+#**/test*
+**/local*
+.idea
+/release
+**/logs
+*.out
+*.iml
+archive
+*.bat
+/deploy

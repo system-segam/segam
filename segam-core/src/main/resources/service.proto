@@ -1,0 +1,109 @@
+syntax = "proto2";
+//import "google/protobuf/empty.proto";
+import "common.proto";
+package federate;
+//是否运行生成多个java文件
+option java_multiple_files = false;
+//定义包名
+option java_package = "com.ada.federate.rpc";
+//定义生成的类名称
+option java_outer_classname = "RPCService";
+
+service Segam {
+  // Initialization work: add client、
+  rpc rpcHello(HelloRequest)returns(Status);
+  rpc batchQuery (SQLMessage) returns(Status){}
+
+  rpc pubicQuery (SQLExpression) returns(RPCResult){}
+  rpc privateQuery (SQLExpression) returns(Status){}
+
+  rpc privateSetUnion(SetUnionRequest) returns(SetUnionResponse){}
+
+  rpc secureGroupByMax(GroupByMaxRequest)returns(Status){}
+  rpc secureGroupByMedian(GroupByMedianRequest)returns(Status){}
+  rpc secureGroupBySumSS(GroupBySumSSRequest)returns(SSMessage){}
+  rpc secretSharing(SSRequest)returns(SSMessage){}
+
+  rpc command(CommandRequest)returns (CommandResponse){}
+}
+
+message SetUnionRequest{
+  required int64 uuid = 1;
+  required int32 round = 2;
+  required int32 index = 3;
+  repeated string key = 4;
+  repeated string keyIndex = 5;
+  //  required string dimension = 5;
+}
+
+message SetUnionResponse{
+  repeated string key = 1;
+  repeated string keyIndex = 2;
+  optional Status status = 3;
+}
+
+message CommandRequest{
+  // command: 0 给定 uuid，表示本次查询完成，清理 buffer
+  // command：1 获取结果
+  required int32 commandCode = 1;
+  optional int64 uuid = 2;
+}
+
+message CommandResponse{
+  optional string message = 1;
+  optional Status status = 2;
+}
+
+message GroupByMaxRequest{
+  required int64 uuid = 1;
+  repeated string key = 2;
+  repeated string keyIndex = 5;
+  repeated int32 keyList = 4;
+  repeated int32 threshold = 3;
+}
+
+message GroupByMedianRequest{
+  required int64 uuid = 1;
+  //  偶数情况需要两轮
+  repeated bool evenFlag = 6;
+  repeated string key = 2;
+  repeated string keyIndex = 5;
+  repeated int32 keyList = 4;
+  repeated int32 threshold = 3;
+}
+
+message GroupBySumSSRequest{
+  repeated int32 publicKey = 1;
+  required int64 uuid = 2;
+  optional int32 round = 3;
+  repeated string key = 4;
+  repeated string keyList = 6;
+  //  optional string dimensionName = 3;
+  //  optional string valueName = 4;
+  // 0: sum, 1: max, 2: median
+  required int32 queryType = 5;
+}
+
+message GroupBySumSSResponse{
+  //  repeated string key = 1;
+  required SSMessage message = 2;
+  optional Status status = 3;
+}
+
+message HelloRequest{
+  repeated string endpoint = 1;
+  required int32 siloId = 2;
+  repeated Column column = 3;
+  required int32 round = 5;
+  required int32 index = 6;
+  // 密钥生成
+  //  required string p = 5;
+  //  required string g = 6;
+  //  required string publicKey = 7;
+
+}
+
+message Column{
+  repeated string fullKeyList = 1;
+  required string fieldName = 2;
+}
