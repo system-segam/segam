@@ -23,7 +23,7 @@ Segam is a secure collaborative analytics system designed to execute secure grou
 - First, ensure that the above requirements are installed.
 - Granting Docker permissions to the account (optional). You can try running "docker run hello-world". If you don't see the message "Permission Denied", then there's no need to proceed with this step.
 
-```
+```shell
 # Verify the existence of the Docker group
 cat /etc/group | grep docker
 
@@ -36,14 +36,14 @@ sudo usermod -aG docker $USER
 
 - Clone the git repository
 
-```
+```shell
 git clone git@github.com:system-segam/segam.git
 cd segam
 ```
 
 - Deploying three data owners using Docker and initializing them.
 
-```
+```shell
 docker exec -u postgres container1 bash -c "cd root/container/workload && ./create-table.sh"
 
 docker exec -u postgres container1 bash -c "cd root/container/workload && ./import-table.sh"
@@ -56,7 +56,7 @@ chmod +x ./deploy.sh && ./deploy.sh
 
 - You can verify whether the data container has been initialized successfully by executing the following command. 
 
-```
+```shell
 # If it displays the Java version and the number of rows in the data table correctly, it indicates successful initialization.
 
 docker exec -u postgres container1 bash -c 'java --version && psql postgres -c "select count(*) from lineitem"'
@@ -66,14 +66,14 @@ docker exec -u postgres container3 bash -c 'java --version && psql postgres -c "
 
 - Start up all data owner services.
 
-```
+```shell
 cd release
 ./start-server.sh
 ```
 
 - Start up query side service.
 
-```
+```shell
 # You can view the parameter instructions by using java -jar core.jar -h
 java -jar core.jar -i test_sum.sql -p private
 ```
@@ -94,14 +94,12 @@ This section will be continuously updated in the future.
 
 - Segam utilizes the gRPC framework, modifying **.proto files in segam-core/src/main/resources/ and executing the following command to generate code:
 
-```
+```shell
 cd segam-core
 call mvn protobuf:compile -f pom.xml
 call mvn protobuf:compile-custom -f pom.xml
 cd ..
 ```
-
-- 
 
 
 
