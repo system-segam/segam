@@ -44,10 +44,6 @@ cd segam
 - Deploying three data owners using Docker and initializing them.
 
 ```shell
-docker exec -u postgres container1 bash -c "cd root/container/workload && ./create-table.sh"
-
-docker exec -u postgres container1 bash -c "cd root/container/workload && ./import-table.sh"
-
 docker pull postgres:13
 # Package and deploy
 chmod +x ./package.sh && ./package.sh
